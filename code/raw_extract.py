@@ -38,8 +38,8 @@ def extract_and_redact_columns(input_csv_path):
         "Net savings"
     ].sum()
 
-    # Append the Total Savings and Total Credits rows
-    totals_row = pd.DataFrame(
+    # Create the Total Savings and Total Credits rows
+    totals_data = pd.DataFrame(
         {
             "Instance type": ["Total Savings", "Total Credits"],
             "Reservation ID": ["-", "-"],
@@ -50,16 +50,15 @@ def extract_and_redact_columns(input_csv_path):
         }
     )
 
-    # Append the Total row to the sorted data
-    sorted_data = sorted_data._append(sum_row, ignore_index=True)
-
-    # Append the Total Savings and Total Credits rows
-    sorted_data = sorted_data._append(totals_row, ignore_index=True)
+    # Concatenate the sorted data with the totals data
+    sorted_data = pd.concat(
+        [sorted_data, sum_row.to_frame().T, totals_data], ignore_index=True
+    )
 
     # Get the input file name without extension
     base_filename = os.path.splitext(os.path.basename(input_csv_path))[0]
 
-    # Create the output CSV file name
+    # Create the output CSV file path
     output_csv_path = f"/resulting-report/{base_filename}_redacted.csv"
 
     # Write the selected columns data to the output CSV file
@@ -70,8 +69,9 @@ def extract_and_redact_columns(input_csv_path):
     )
 
 
-# Example usage
-input_csv_name = (
-    "./../raw-data/input.csv"  # Replace with the actual input CSV file name
-)
-extract_and_redact_columns(input_csv_name)
+# Process all CSV files in the /raw-data/ folder
+raw_data_folder = "/raw-data/"  # Replace with the actual path to the raw data folder
+for filename in os.listdir(raw_data_folder):
+    if filename.endswith(".csv"):
+        input_csv_path = os.path.join(raw_data_folder, filename)
+        extract_and_redact_columns(input_csv_path)
