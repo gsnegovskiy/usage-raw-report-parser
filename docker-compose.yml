@@ -1,0 +1,8 @@
+services:
+  app:
+    build: .
+    command: sleep 6000000
+    volumes:
+      - ./code:/code #optional for debugging
+      - ./raw-data:/raw-data
+      - ./resulting-report:/resulting-report
