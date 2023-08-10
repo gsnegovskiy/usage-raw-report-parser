@@ -1,3 +1,5 @@
 .git
 .pre-commit-config.yaml
 Dockerfile
+raw-data
+resulting-report
