@@ -1,23 +1,38 @@
 import pandas as pd
+import os
 
-# Define the columns you want to extract
-columns_to_extract = [
-    "column_name1",
-    "column_name2",
-    "column_name3",
-]  # Replace with actual column names
 
-# Load the CSV file into a pandas DataFrame
-input_csv_path = "input.csv"  # Replace with the path to your input CSV file
-data = pd.read_csv(input_csv_path)
+def extract_and_redact_columns(input_csv_path):
+    # Define the columns you want to extract
+    columns_to_extract = [
+        "Instance type",
+        "Reservation ID",
+        "Number of RIs",
+        "On-Demand cost equivalent",
+        "Effective reservation cost",
+        "Net savings",
+    ]
 
-# Create a new DataFrame with only the selected columns
-selected_columns_data = data[columns_to_extract]
+    # Load the CSV file into a pandas DataFrame
+    data = pd.read_csv(input_csv_path)
 
-# Define the output CSV file path
-output_csv_path = "output.csv"  # Replace with the desired output CSV file path
+    # Create a new DataFrame with only the selected columns
+    selected_columns_data = data[columns_to_extract]
 
-# Write the selected columns data to the output CSV file
-selected_columns_data.to_csv(output_csv_path, index=False)
+    # Get the input file name without extension
+    base_filename = os.path.splitext(os.path.basename(input_csv_path))[0]
 
-print("Selected columns extracted and saved to the new CSV file.")
+    # Create the output CSV file name
+    output_csv_path = f"/resulting-report/{base_filename}_redacted.csv"
+
+    # Write the selected columns data to the output CSV file
+    selected_columns_data.to_csv(output_csv_path, index=False)
+
+    print(f"Selected columns extracted and saved to {output_csv_path}.")
+
+
+# Example usage
+input_csv_name = (
+    "./../raw-data/input.csv"  # Replace with the actual input CSV file name
+)
+extract_and_redact_columns(input_csv_name)
