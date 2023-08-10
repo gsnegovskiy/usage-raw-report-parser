@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import os
 
 
@@ -19,6 +20,12 @@ def extract_and_redact_columns(input_csv_path):
     # Create a new DataFrame with only the selected columns
     selected_columns_data = data[columns_to_extract]
 
+    # Calculate the sum of columns
+    sum_row = selected_columns_data.select_dtypes(np.number).sum()
+    sum_row["Instance type"] = "Total"
+    sum_row["Reservation ID"] = "-"
+    selected_columns_data = selected_columns_data._append(sum_row, ignore_index=True)
+
     # Get the input file name without extension
     base_filename = os.path.splitext(os.path.basename(input_csv_path))[0]
 
@@ -28,7 +35,7 @@ def extract_and_redact_columns(input_csv_path):
     # Write the selected columns data to the output CSV file
     selected_columns_data.to_csv(output_csv_path, index=False)
 
-    print(f"Selected columns extracted and saved to {output_csv_path}.")
+    print(f"Selected columns extracted with sums and saved to {output_csv_path}.")
 
 
 # Example usage
