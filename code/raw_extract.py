@@ -59,7 +59,7 @@ def extract_and_redact_columns(input_csv_path):
     base_filename = os.path.splitext(os.path.basename(input_csv_path))[0]
 
     # Create the output CSV file path
-    output_csv_path = f"/resulting-report/{base_filename}_redacted.csv"
+    output_csv_path = f"/resulting-report/{base_filename}_calculated.csv"
 
     # Write the selected columns data to the output CSV file
     sorted_data.to_csv(output_csv_path, index=False)
